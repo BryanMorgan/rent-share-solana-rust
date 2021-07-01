@@ -1,0 +1,25 @@
+[package]
+name = "rent-share-solana-rust"
+description = "Manage rental agreements between 2 parties using Solana to record transactions. Written in Rust."
+version = "0.2.0"
+license = "Apache-2.0"
+authors = ["Bryan Morgan <bryan@thinkware.io>"]
+edition = "2018"
+
+[features]
+exclude_entrypoint = []
+
+[dependencies]
+solana-program = "=1.7.1"
+thiserror = "1.0.25"
+# Ensure this matches the solana-program version
+borsh = "0.8.1" 
+borsh-derive = "0.8.1" 
+
+[dev-dependencies]
+solana-program-test = "=1.7.1"
+solana-sdk = "=1.7.1"
+
+[lib]
+name = "rentshare"
+crate-type = ["cdylib", "lib"]
