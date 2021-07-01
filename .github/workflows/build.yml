@@ -21,5 +21,5 @@ jobs:
       - name: Install solana
         run: sh -c "$(curl -sSfL https://release.solana.com/v1.7.3/install)"
       - name: Add solana to PATH
-        run: echo "~/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+        run: echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
       - run: cargo build-bpf
