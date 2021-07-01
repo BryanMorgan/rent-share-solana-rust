@@ -19,5 +19,5 @@ jobs:
         with:
           toolchain: stable
       - name: Install solana
-        run: sh -c "$(curl -sSfL https://release.solana.com/$solana_version/install)"
+        run: sh -c "$(curl -sSfL https://release.solana.com/v1.7.3/install)"
       - run: cargo build-bpf
