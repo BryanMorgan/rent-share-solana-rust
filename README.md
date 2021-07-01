@@ -1,5 +1,7 @@
-# Rent Share
-Manage rental agreements between two parties by capturing the agreement and rental payments on the Solana blockchain.
+# Rent Share 
+[![Build](https://github.com/BryanMorgan/rent-share-solana-rust/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/BryanMorgan/rent-share-solana-rust/actions/workflows/build.yml)
+
+Manage rental agreements between two parties by capturing the agreement and rental payments on the Solana blockchain using a Solana Smart Contract (Program)
 
 # Instructions
 ## Building
@@ -9,12 +11,14 @@ cargo build-bpf
 
 ## Deploy to devnet
 ### Validate Solana Configuration
+Make sure your solana environment is pointing to devnet
+
 ```bash
 solana config set --url https://api.devnet.solana.com
 solana config get
 ```
 
-### Deploy BPF library
+### Deploy BPF Program
 ```bash
 solana program deploy ./target/deploy/rentshare.so
 ```
