@@ -18,4 +18,6 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Install solana
+        run: sh -c "$(curl -sSfL https://release.solana.com/$solana_version/install)"
       - run: cargo build-bpf
