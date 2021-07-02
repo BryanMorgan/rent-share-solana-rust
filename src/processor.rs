@@ -12,8 +12,9 @@ use solana_program::{
 };
 
 use crate::{
-    error::RentShareError::RentAlreadyPaidInFull, instruction::RentShareInstruction,
-    state::RentShareAccount,
+    error::RentShareError,
+    instruction::RentShareInstruction,
+    state::{AgreementStatus, RentShareAccount},
 };
 
 pub struct Processor;
@@ -95,7 +96,7 @@ impl Processor {
 
         let mut rent_data = rent_agreement_data.unwrap();
 
-        rent_data.initialized = 1;
+        rent_data.status = AgreementStatus::Active as u8;
         rent_data.payee_pubkey = payee_pubkey;
         rent_data.payer_pubkey = payer_pubkey;
         rent_data.rent_amount = rent_amount;
@@ -172,7 +173,16 @@ impl Processor {
 
         if rent_data.remaining_payments == 0 {
             msg!("[RentShare] Rent already paid in full");
-            return Err(RentAlreadyPaidInFull.into());
+            return Err(RentShareError::RentAlreadyPaidInFull.into());
+        }
+
+        if rent_data.rent_amount != rent_amount {
+            msg!(
+                "[RentShare] Rent amount does not match agreement amount: {} vs {}",
+                rent_data.rent_amount,
+                rent_amount
+            );
+            return Err(RentShareError::RentPaymentAmountMismatch.into());
         }
 
         let instruction =
@@ -193,7 +203,7 @@ impl Processor {
             payer_account.lamports()
         );
 
-        // Decrement the number of payment (assumes full payment was made for now)
+        // Decrement the number of payment
         rent_data.remaining_payments -= 1;
         rent_data.serialize(&mut &mut rent_agreement_account.data.borrow_mut()[..])?;
 

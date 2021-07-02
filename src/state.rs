@@ -7,7 +7,7 @@ use solana_program::{
 /// Rent Share Account state stored in the Agreement Account
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct RentShareAccount {
-    pub initialized: u8,
+    pub status: u8,
     pub payee_pubkey: Pubkey,
     pub payer_pubkey: Pubkey,
     pub deposit: u64,
@@ -21,11 +21,19 @@ impl Sealed for RentShareAccount {}
 
 impl IsInitialized for RentShareAccount {
     fn is_initialized(&self) -> bool {
-        self.initialized == 1
+        self.status != AgreementStatus::Uninitialized as u8
     }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub enum Duration {
     Months = 0,
+}
+
+#[derive(Copy, Clone)]
+pub enum AgreementStatus {
+    Uninitialized = 0,
+    Active,
+    Completed,
+    Violated,
 }
