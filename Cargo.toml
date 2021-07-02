@@ -10,15 +10,14 @@ edition = "2018"
 exclude_entrypoint = []
 
 [dependencies]
-solana-program = "=1.7.1"
+solana-program = "=1.7.4"
 thiserror = "1.0.25"
-# Ensure this matches the solana-program version
-borsh = "0.8.1" 
-borsh-derive = "0.8.1" 
+borsh = "0.9.0" 
+borsh-derive = "0.9.0" 
 
 [dev-dependencies]
-solana-program-test = "=1.7.1"
-solana-sdk = "=1.7.1"
+#solana-program-test = "=1.7.4"
+#solana-sdk = "=1.7.1"
 
 [lib]
 name = "rentshare"
