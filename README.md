@@ -43,7 +43,7 @@ Using an externally created Company account (try [Sollet](https://www.sollet.io/
   );
 
   const lamports = await connection.getMinimumBalanceForRentExemption(
-    RENT_SCHEMA_SIZE, // Currently 90
+    RENT_AGREEMENT_SCHEMA_SIZE, // Currently 90
   );
 
   const transaction = new Transaction().add(
@@ -53,7 +53,7 @@ Using an externally created Company account (try [Sollet](https://www.sollet.io/
       seed,
       newAccountPubkey: rentAgreementPublicKey,
       lamports,
-      space: RENT_SCHEMA_SIZE,
+      space: RENT_AGREEMENT_SCHEMA_SIZE,
       programId,
     }),
   );
