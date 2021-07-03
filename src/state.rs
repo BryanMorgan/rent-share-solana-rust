@@ -25,6 +25,12 @@ impl IsInitialized for RentShareAccount {
     }
 }
 
+impl RentShareAccount {
+    pub fn is_complete(&self) -> bool {
+        self.status == AgreementStatus::Completed as u8
+    }
+}
+
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub enum Duration {
     Months = 0,

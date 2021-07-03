@@ -171,7 +171,7 @@ impl Processor {
             payer_account.lamports()
         );
 
-        if rent_data.remaining_payments == 0 {
+        if rent_data.is_complete() {
             msg!("[RentShare] Rent already paid in full");
             return Err(RentShareError::RentAlreadyPaidInFull.into());
         }
@@ -205,6 +205,9 @@ impl Processor {
 
         // Decrement the number of payment
         rent_data.remaining_payments -= 1;
+        if rent_data.remaining_payments == 0 {
+            rent_data.status = AgreementStatus::Completed as u8;
+        }
         rent_data.serialize(&mut &mut rent_agreement_account.data.borrow_mut()[..])?;
 
         Ok(())
