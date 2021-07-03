@@ -25,6 +25,12 @@ pub enum RentShareInstruction {
     /// 2. `[]` Payee (Owner) account (public key)
     /// 3. `[]` System program account
     PayRent { rent_amount: u64 },
+
+    /// Terminate agreement early, violating the terms
+    ///
+    /// Accounts expected:
+    /// 0. `[writable]` The Rent Agreement account created to manage state across 2 parties; owned by program id.
+    TerminateEarly {},
 }
 
 impl RentShareInstruction {
@@ -55,6 +61,7 @@ impl RentShareInstruction {
                 let rent_amount: u64 = Self::unpack_u64(&rest, 0)?;
                 Self::PayRent { rent_amount }
             }
+            2 => Self::TerminateEarly {},
             _ => return Err(ProgramError::InvalidInstructionData),
         })
     }

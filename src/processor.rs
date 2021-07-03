@@ -47,6 +47,7 @@ impl Processor {
             RentShareInstruction::PayRent { rent_amount } => {
                 Self::pay_rent(accounts, program_id, rent_amount)
             }
+            RentShareInstruction::TerminateEarly {} => Self::terminate_early(accounts, program_id),
         }
     }
 
@@ -95,6 +96,10 @@ impl Processor {
         }
 
         let mut rent_data = rent_agreement_data.unwrap();
+        if rent_data.is_initialized() {
+            msg!("[RentShare] Rent agreement already initialized");
+            return Err(ProgramError::AccountAlreadyInitialized);
+        }
 
         rent_data.status = AgreementStatus::Active as u8;
         rent_data.payee_pubkey = payee_pubkey;
@@ -176,6 +181,11 @@ impl Processor {
             return Err(RentShareError::RentAlreadyPaidInFull.into());
         }
 
+        if rent_data.is_terminated() {
+            msg!("[RentShare] Rent agreement already terminated");
+            return Err(RentShareError::RentAgreementTerminated.into());
+        }
+
         if rent_data.rent_amount != rent_amount {
             msg!(
                 "[RentShare] Rent amount does not match agreement amount: {} vs {}",
@@ -208,6 +218,49 @@ impl Processor {
         if rent_data.remaining_payments == 0 {
             rent_data.status = AgreementStatus::Completed as u8;
         }
+        rent_data.serialize(&mut &mut rent_agreement_account.data.borrow_mut()[..])?;
+
+        Ok(())
+    }
+
+    fn terminate_early(accounts: &[AccountInfo], program_id: &Pubkey) -> ProgramResult {
+        let accounts_iter = &mut accounts.iter();
+
+        let rent_agreement_account = next_account_info(accounts_iter)?;
+        if rent_agreement_account.owner != program_id {
+            msg!("[RentShare] Rent agreement account is not owned by this program");
+            return Err(ProgramError::IncorrectProgramId);
+        }
+
+        let rent_agreement_data =
+            RentShareAccount::try_from_slice(&rent_agreement_account.data.borrow());
+
+        if rent_agreement_data.is_err() {
+            msg!(
+                "[RentShare] Rent agreement account data size incorrect: {}",
+                rent_agreement_account.try_data_len()?
+            );
+            return Err(ProgramError::InvalidAccountData);
+        }
+
+        let mut rent_data = rent_agreement_data.unwrap();
+        if !rent_data.is_initialized() {
+            msg!("[RentShare] Rent agreement account not initialized");
+            return Err(ProgramError::UninitializedAccount);
+        }
+
+        if rent_data.is_complete() {
+            msg!("[RentShare] Rent already paid in full");
+            return Err(RentShareError::RentAlreadyPaidInFull.into());
+        }
+
+        if rent_data.is_terminated() {
+            msg!("[RentShare] Rent agreement already terminated");
+            return Err(RentShareError::RentAgreementTerminated.into());
+        }
+
+        rent_data.remaining_payments = 0;
+        rent_data.status = AgreementStatus::Terminated as u8;
         rent_data.serialize(&mut &mut rent_agreement_account.data.borrow_mut()[..])?;
 
         Ok(())

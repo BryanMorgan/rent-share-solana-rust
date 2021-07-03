@@ -8,9 +8,13 @@ pub enum RentShareError {
     #[error("Rent Already Paid In Full")]
     RentAlreadyPaidInFull = 100,
 
-    /// Rent pament doesn't match amount in initial agreement
+    /// Rent payment doesn't match amount in initial agreement
     #[error("Rent Payment Amount Mistmatch")]
     RentPaymentAmountMismatch,
+
+    /// Rent agreement already terminated
+    #[error("Rent Agreement Terminated")]
+    RentAgreementTerminated,
 }
 
 impl From<RentShareError> for ProgramError {

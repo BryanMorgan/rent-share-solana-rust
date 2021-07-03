@@ -29,6 +29,10 @@ impl RentShareAccount {
     pub fn is_complete(&self) -> bool {
         self.status == AgreementStatus::Completed as u8
     }
+
+    pub fn is_terminated(&self) -> bool {
+        self.status == AgreementStatus::Terminated as u8
+    }
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
@@ -41,5 +45,5 @@ pub enum AgreementStatus {
     Uninitialized = 0,
     Active,
     Completed,
-    Violated,
+    Terminated,
 }
