@@ -30,10 +30,10 @@ solana logs | grep "\[RentShare\]"
 ```
 
 ## Program Call Examples
-The examples below show how to call program with 2 different instructions using the `@solana/web3.js` library. 
+The examples below show how to call the program with 2 instructions using the `@solana/web3.js` library. 
 
-### 1. Create the Rent Agreement Account
-Using an externally created Company account (try [Sollet](https://www.sollet.io/)), create a new rental agreement using a unique `seed` and the program ID from the Rust BPF output:
+### 1. First, Create the Rent Agreement Account
+Using an externally created "Company" Account to fund the transactions (try [Sollet](https://www.sollet.io/)), create a new rental agreement using a unique `seed` and the program ID from the Rust BPF output:
 
 ```javascript
   const rentAgreementPublicKey = await PublicKey.createWithSeed(
@@ -60,8 +60,8 @@ Using an externally created Company account (try [Sollet](https://www.sollet.io/
   await sendAndConfirmTransaction(connection, transaction, [accountOwner]);
 ```
 ### 2. Initialize Rent Agreement Account
-Initialize the rent agreement account data using the rental terms - duration, rent amount, and deposit amount. 
-Also record the payee (owner) and payer (renter) to ensure future transactions are only between these two parties.
+Initialize the rent agreement account data using the rental terms - duration, rent amount, and deposit amount - by invoking the program with instruction `0`.
+This will also record the payee (owner) and payer (renter) public keys to ensure future transactions are only between these two parties.
 
 ```javascript
   const instruction = 0;
@@ -90,8 +90,8 @@ await sendAndConfirmTransaction(
 ```
 
 ### 3. Pay Rent
-Transfer lamports from the payer (renter) to the payee (owner) for rent due. Decrements the `remaining_payments` saved
-in the rental agreement account data.
+Transfer lamports from the payer (renter) to the payee (owner) for rent due using instruction `1`. This will decrement the `remaining_payments` saved
+in the rental agreement account data. They payer account must sign the transaction to tranfer funds to the payee.
 
 ```javascript
   const instruction = 1;
