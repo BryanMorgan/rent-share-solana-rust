@@ -30,7 +30,7 @@ solana logs | grep "\[RentShare\]"
 ```
 
 ## Program Call Examples
-The example below shows how to call the programs with 2 instructions using the `@solana/web3.js` library. 
+The examples below show how to call program with 2 different instructions using the `@solana/web3.js` library. 
 
 ### 1. Create the Rent Agreement Account
 Using an externally created Company account (try [Sollet](https://www.sollet.io/)), create a new rental agreement using a unique `seed` and the program ID from the Rust BPF output:
@@ -60,7 +60,7 @@ Using an externally created Company account (try [Sollet](https://www.sollet.io/
   await sendAndConfirmTransaction(connection, transaction, [accountOwner]);
 ```
 ### 2. Initialize Rent Agreement Account
-Initialize the agreement account data using the rental terms - duration, rent amount, and deposit amount. 
+Initialize the rent agreement account data using the rental terms - duration, rent amount, and deposit amount. 
 Also record the payee (owner) and payer (renter) to ensure future transactions are only between these two parties.
 
 ```javascript
@@ -89,7 +89,7 @@ await sendAndConfirmTransaction(
   );
 ```
 
-### 2. Pay Rent
+### 3. Pay Rent
 Transfer lamports from the payer (renter) to the payee (owner) for rent due. Decrements the `remaining_payments` saved
 in the rental agreement account data.
 
