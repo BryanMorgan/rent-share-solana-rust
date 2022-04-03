@@ -51,6 +51,7 @@ impl Processor {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn initialize_rent_contract(
         accounts: &[AccountInfo],
         program_id: &Pubkey,
@@ -196,7 +197,7 @@ impl Processor {
         }
 
         let instruction =
-            system_instruction::transfer(&payer_account.key, &payee_account.key, rent_amount);
+            system_instruction::transfer(payer_account.key, payee_account.key, rent_amount);
 
         // Invoke the system program to transfer funds
         invoke(

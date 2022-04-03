@@ -43,9 +43,9 @@ impl RentShareInstruction {
             0 => {
                 let payee_pubkey: Pubkey = Pubkey::new(&rest[..32]);
                 let payer_pubkey: Pubkey = Pubkey::new(&rest[32..64]);
-                let deposit: u64 = Self::unpack_u64(&rest, 64)?;
-                let rent_amount: u64 = Self::unpack_u64(&rest, 72)?;
-                let duration: u64 = Self::unpack_u64(&rest, 80)?;
+                let deposit: u64 = Self::unpack_u64(rest, 64)?;
+                let rent_amount: u64 = Self::unpack_u64(rest, 72)?;
+                let duration: u64 = Self::unpack_u64(rest, 80)?;
                 let duration_unit: u8 = rest[88];
 
                 Self::InitializeRentContract {
@@ -58,7 +58,7 @@ impl RentShareInstruction {
                 }
             }
             1 => {
-                let rent_amount: u64 = Self::unpack_u64(&rest, 0)?;
+                let rent_amount: u64 = Self::unpack_u64(rest, 0)?;
                 Self::PayRent { rent_amount }
             }
             2 => Self::TerminateEarly {},
